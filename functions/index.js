@@ -1,8 +1,17 @@
 const functions = require('firebase-functions');
+const admin = require('firebase-admin');
+const express = require('express');
+const places = require('./functions/places');
 
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-//
-// exports.helloWorld = functions.https.onRequest((request, response) => {
-//  response.send("Hello from Firebase!");
-// });
+admin.initializeApp();
+
+const database = admin.firestore();
+
+const app = express();
+
+app.get('/places/:id',(request,response) => places.getInfo(request,response,database));
+
+
+
+
+exports.api = functions.https.onRequest(app);
