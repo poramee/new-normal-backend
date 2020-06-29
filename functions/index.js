@@ -12,6 +12,4 @@ const app = express();
 app.get('/places/:id',(request,response) => places.getInfo(request,response,database));
 
 
-
-
 exports.api = functions.https.onRequest(app);
