@@ -10,6 +10,8 @@ const database = admin.firestore();
 const app = express();
 
 app.get('/places/:id',(request,response) => places.getInfo(request,response,database));
-
+app.get('/places/:id/recordPersonEntrance',(request,response) => places.recordPersonEntrance(request,response,database));
+app.get('/places/:id/recordPersonExit',(request,response) => places.recordPersonExit(request,response,database));
+app.post('/places/create',(request,response) => places.createNewPlace(request,response,database));
 
 exports.api = functions.https.onRequest(app);
