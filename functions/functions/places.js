@@ -9,13 +9,12 @@ exports.getInfo = (request, response, database) => {
 		.get()
 		.then((snapshot) => {
 			console.log(typeof snapshot.data());
-			if (!snapshot.exists)
-				response.status(404).send("The requested place id is not found.");
-			else response.status(200).send(snapshot.data());
+			if (!snapshot.exists) response.status(404).send({status:"404 Error", message:"The requested place id is not found."});
+			else response.status(200).send({status: "Success",message: snapshot.data()});
 			return 0;
 		})
 		.catch((error) => {
-			response.status(500).send(error);
+			response.status(500).send({status: "500 Error", message: error.toString()});
 		});
 };
 
@@ -29,11 +28,7 @@ const recordActivity = async (request, response, database, type) => {
 				const data = snapshot.data();
 				const currentTime = new Date();
 				if (data.visitor_number <= 0 && type === "exit") {
-					const responseToSend = {
-						status: "406 Error",
-						message: "Current capacity is now 0",
-					};
-					response.status(406).send(responseToSend);
+					response.status(406).send({status:"404 Error", message:"Current capacity is now 0"});
 					return;
 				}
 
@@ -58,17 +53,13 @@ const recordActivity = async (request, response, database, type) => {
 							type === "exit" ? -1 : 1
 						),
 					});
-				const responseToSend = {
-					status: "Success",
-					message: null,
-				};
-				response.status(200).send(responseToSend);
-			} else response.status(404).send("The requested place id is not found.");
+				response.status(200).send({status: "Success",message: null});
+			} else response.status(404).send({status:"404 Error", message:"The requested place id is not found."});
 			return;
 		})
 		.catch((error) => {
 			console.log(error);
-			response.status(500).send(error.toString());
+			response.status(500).send({status: "500 Error", message: error.toString()});
 		});
 };
 
@@ -150,6 +141,5 @@ exports.createNewPlace = async (request, response, database) => {
 		} catch (error){
 			response.status(406).send({status: "406 Error",message: error.toString()})
 		}
-		
 	}
 };
