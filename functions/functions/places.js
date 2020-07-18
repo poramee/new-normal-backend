@@ -109,7 +109,7 @@ exports.createNewPlace = async (request, response, database) => {
 			const dataToStore = {
 			name: data.name.toString(),
 			category: data.category.toString(),
-			location: new firestore.firestore.GeoPoint(
+			coordinates: new firestore.firestore.GeoPoint(
 				data.location.latitude,
 				data.location.longitude
 			),
