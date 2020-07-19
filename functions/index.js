@@ -11,9 +11,10 @@ const geofirestoreDB = geofirestore.initializeApp(database);
 
 const app = express();
 
-app.get('/places/:id',(request,response) => places.getInfo(request,response,geofirestoreDB));
+app.get('/places/:id/info',(request,response) => places.getInfo(request,response,geofirestoreDB));
 app.get('/places/:id/recordPersonEntrance',(request,response) => places.recordPersonEntrance(request,response,geofirestoreDB));
 app.get('/places/:id/recordPersonExit',(request,response) => places.recordPersonExit(request,response,geofirestoreDB));
 app.post('/places/create',(request,response) => places.createNewPlace(request,response,geofirestoreDB));
+app.get('/places/nearMe',(request,response) => places.getNearbyPlaces(request,response,geofirestoreDB));
 
 exports.api = functions.https.onRequest(app);
