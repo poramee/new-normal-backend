@@ -187,6 +187,6 @@ exports.getNearbyPlaces = async (request, response, database) => {
 	})
 	.catch(error => {
 		console.log(error);
-		response.status(406).send({status: "406 Error", message: error});
+		response.status(500).send({status: "500 Error", message: error});
 	})
 };
