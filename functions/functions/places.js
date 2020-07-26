@@ -1,5 +1,4 @@
 const firestore = require("firebase-admin");
-const { firebaseConfig } = require("firebase-functions");
 
 exports.getInfo = (request, response, database) => {
 	console.log(request.params.id);
@@ -77,7 +76,6 @@ const recordActivity = async (request, response, database, type) => {
 						status: "404 Error",
 						message: "The requested place id is not found.",
 					});
-			return;
 		})
 		.catch((error) => {
 			console.log(error);
@@ -88,10 +86,10 @@ const recordActivity = async (request, response, database, type) => {
 };
 
 exports.recordPersonEntrance = async (request, response, database) => {
-	recordActivity(request, response, database, "entrance");
+	await recordActivity(request, response, database, "entrance");
 };
 exports.recordPersonExit = async (request, response, database) => {
-	recordActivity(request, response, database, "exit");
+	await recordActivity(request, response, database, "exit");
 };
 exports.createNewPlace = async (request, response, database) => {
 	const data = request.body;
@@ -152,7 +150,6 @@ exports.createNewPlace = async (request, response, database) => {
 						},
 					};
 					response.status(200).send(responseToSend);
-					return;
 				})
 				.catch((error) => {
 					const responseToSend = {
@@ -177,16 +174,29 @@ exports.getNearbyPlaces = async (request, response, database) => {
 			parseFloat(request.query.lat),
 			parseFloat(request.query.long)
 		),
-		radius: 1000,
+		radius: 1,
 	});
 
 	query.get().then((value) => {
 		console.log(value);
 		response.status(200).send({status: "Success", message: value});
-		return;
 	})
-	.catch(error => {
-		console.log(error);
-		response.status(500).send({status: "500 Error", message: error});
-	})
+		.catch(error => {
+			console.log(error);
+			response.status(500).send({status: "500 Error", message: error});
+		})
 };
+
+exports.getPlaceByCategory = async (request, response, database) => {
+	let placeRef = database.collection("places");
+	const category = request.query.cat;
+	let query = placeRef.where("category", "==", category);
+	await query.get()
+		.then(queryResult => {
+			console.log(queryResult);
+			response.status(200).send({status: "Success", message: queryResult});
+		})
+		.catch(error => {
+			response.status(500).send({status: "500 Error", message: error});
+		})
+}
