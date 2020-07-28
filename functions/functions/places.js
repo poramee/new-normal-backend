@@ -44,7 +44,6 @@ const recordActivity = async (request, response, database, type) => {
 							status: "404 Error",
 							message: "Current capacity is now 0",
 						});
-					return;
 				}
 
 				await database
@@ -68,14 +67,16 @@ const recordActivity = async (request, response, database, type) => {
 							type === "exit" ? -1 : 1
 						),
 					});
-				response.status(200).send({ status: "Success", message: null });
-			} else
+				response.status(200).send({status: "Success", message: null});
+			} else {
 				response
 					.status(404)
 					.send({
 						status: "404 Error",
 						message: "The requested place id is not found.",
 					});
+			}
+			return null;
 		})
 		.catch((error) => {
 			console.log(error);
@@ -150,6 +151,7 @@ exports.createNewPlace = async (request, response, database) => {
 						},
 					};
 					response.status(200).send(responseToSend);
+					return null;
 				})
 				.catch((error) => {
 					const responseToSend = {
@@ -180,6 +182,7 @@ exports.getNearbyPlaces = async (request, response, database) => {
 	query.get().then((value) => {
 		console.log(value);
 		response.status(200).send({status: "Success", message: value});
+		return null;
 	})
 		.catch(error => {
 			console.log(error);
@@ -189,12 +192,13 @@ exports.getNearbyPlaces = async (request, response, database) => {
 
 exports.getPlaceByCategory = async (request, response, database) => {
 	let placeRef = database.collection("places");
-	const category = request.query.cat;
+	const category = request.params.category;
 	let query = placeRef.where("category", "==", category);
 	await query.get()
 		.then(queryResult => {
 			console.log(queryResult);
 			response.status(200).send({status: "Success", message: queryResult});
+			return null;
 		})
 		.catch(error => {
 			response.status(500).send({status: "500 Error", message: error});

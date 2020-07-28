@@ -16,6 +16,6 @@ app.get('/places/:id/recordPersonEntrance', (request, response) => places.record
 app.get('/places/:id/recordPersonExit', (request, response) => places.recordPersonExit(request, response, geofirestoreDB));
 app.post('/places/create', (request, response) => places.createNewPlace(request, response, geofirestoreDB));
 app.get('/places/nearMe', (request, response) => places.getNearbyPlaces(request, response, geofirestoreDB));
-app.get('/places/category', (request, response) => places.getPlaceByCategory(request, response, geofirestoreDB));
+app.get('/places/category/:category', (request, response) => places.getPlaceByCategory(request, response, geofirestoreDB));
 
 exports.api = functions.https.onRequest(app);
