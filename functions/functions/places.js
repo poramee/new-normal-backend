@@ -204,3 +204,18 @@ exports.getPlaceByCategory = async (request, response, database) => {
 			response.status(500).send({status: "500 Error", message: error});
 		})
 }
+
+exports.searchPlaces = async (request,response, database) => {
+	let placeRef = database.collection("places");
+	const textToQuery = request.query.query;
+	let query = placeRef.where("name", ">=", textToQuery).where("name","<=",textToQuery + '\uf8ff');
+	await query.get()
+		.then(queryResult => {
+			console.log(queryResult);
+			response.status(200).send({status: "Success", message: queryResult});
+			return null;
+		})
+		.catch(error => {
+			response.status(500).send({status: "500 Error", message: error});
+		})
+}
